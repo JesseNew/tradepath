@@ -120,7 +120,7 @@ html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--
 <div id="eWarn"></div>
 <form id="aForm" onsubmit="return savPos(event)">
 <div class="fr"><div class="fg"><label class="fl">Ticker</label><input class="fi" id="fTk" required placeholder="AAPL" style="text-transform:uppercase"></div>
-<div class="fg"><label class="fl">Setup Type</label><select class="fs" id="fSt" required onchange="valEntry()"><option value="">Select...</option><option>BGU</option><option>PP</option><option>HVE</option></select></div></div>
+<div class="fg"><label class="fl">Setup Type</label><select class="fs" id="fSt" required onchange="valEntry()"><option value="">Select...</option><option>BGU</option><option>PP</option><option>HVE</option><option value="NoSetup">No Setup</option></select></div></div>
 <div class="fr3"><div class="fg"><label class="fl">Entry Price</label><input class="fi" id="fEp" type="number" step="0.01" required placeholder="0.00" oninput="calcSh()"></div>
 <div class="fg"><label class="fl">Stop Price</label><input class="fi" id="fSp" type="number" step="0.01" required placeholder="0.00" oninput="calcSh()"></div>
 <div class="fg"><label class="fl">Shares</label><input class="fi" id="fSh" type="number" required placeholder="Auto"><div class="fh" id="shH"></div></div></div>
@@ -433,13 +433,13 @@ async function saveUpdBal(){
 
 /* ===== REGIME ===== */
 const RC={
-'Strong Uptrend':{mp:15,st:['BGU','PP','HVE','UoV'],sm:1,py:'T1+T2+T3',hc:6,cl:'color:var(--grn)'},
-'Strong but Late':{mp:12,st:['BGU','PP','HVE','UoV'],sm:1,py:'T1+T2',hc:6,cl:'color:var(--cyn)'},
-'Uptrend':{mp:12,st:['BGU','PP','HVE','UoV'],sm:1,py:'T1+T2',hc:4.5,cl:'color:var(--acc)'},
-'Uptrend Under Pressure':{mp:6,st:['PP','HVE'],sm:.75,py:'T1 only',hc:3,cl:'color:var(--yel)'},
-'Choppy / Pressured':{mp:6,st:['PP'],sm:.5,py:'T1 only',hc:2,cl:'color:var(--ora)'},
-'Correction':{mp:2,st:[],sm:.25,py:'None',hc:.5,cl:'color:var(--red)'},
-'FTD Triggered':{mp:2,st:['PP','HVE'],sm:.25,py:'None',hc:.5,cl:'color:var(--pur)'}};
+'Strong Uptrend':{mp:15,st:['BGU','PP','HVE','UoV','NoSetup'],sm:1,py:'T1+T2+T3',hc:6,cl:'color:var(--grn)'},
+'Strong but Late':{mp:12,st:['BGU','PP','HVE','UoV','NoSetup'],sm:1,py:'T1+T2',hc:6,cl:'color:var(--cyn)'},
+'Uptrend':{mp:12,st:['BGU','PP','HVE','UoV','NoSetup'],sm:1,py:'T1+T2',hc:4.5,cl:'color:var(--acc)'},
+'Uptrend Under Pressure':{mp:6,st:['PP','HVE','NoSetup'],sm:.75,py:'T1 only',hc:3,cl:'color:var(--yel)'},
+'Choppy / Pressured':{mp:6,st:['PP','NoSetup'],sm:.5,py:'T1 only',hc:2,cl:'color:var(--ora)'},
+'Correction':{mp:2,st:['NoSetup'],sm:.25,py:'None',hc:.5,cl:'color:var(--red)'},
+'FTD Triggered':{mp:2,st:['PP','HVE','NoSetup'],sm:.25,py:'None',hc:.5,cl:'color:var(--pur)'}};
 function cReg(sc,di,ga,ft){if(ga>=1.5){const b=cRegB(sc,di,ft);return dropT(b);}return cRegB(sc,di,ft);}
 function calcScore(){var sa=+(($('rSA')||{}).value||0),sd=+(($('rSD')||{}).value||0);var qa=+(($('rQA')||{}).value||0),qd=+(($('rQD')||{}).value||0);var s5=+(($('rS5')||{}).value||1),q5=+(($('rQ5')||{}).value||1);var spyNet=sa-sd;var qqNet=qa-qd;var spyScore=(spyNet>=3?1.5:spyNet>=1?1:spyNet>=0?0.5:spyNet>=-2?-0.5:-1.5)+(s5?0.5:-0.5);var qqScore=(qqNet>=3?1.5:qqNet>=1?1:qqNet>=0?0.5:qqNet>=-2?-0.5:-1.5)+(q5?0.5:-0.5);var bl=Math.round(((spyScore+qqScore)/2)*2)/2;var el=$('calcSc');if(el){el.textContent=bl>=0?'+'+bl.toFixed(1):bl.toFixed(1);el.style.color=bl>=2?'var(--grn)':bl>0?'var(--acc)':bl>-2?'var(--ora)':'var(--red)';}return bl;}
 function getCalcScore(){return calcScore();}
