@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0a0e17">
+<title>TradePath</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+:root{--bg0:#0a0e17;--bg1:#111827;--bg2:#1a2235;--brd:#2a3550;--t1:#e8edf5;--t2:#8899b4;--t3:#566a8a;--acc:#3b82f6;--grn:#10b981;--yel:#f59e0b;--red:#ef4444;--pur:#8b5cf6;--ora:#f97316;--cyn:#06b6d4;--r:12px}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--bg0);color:var(--t1);overflow:hidden;-webkit-tap-highlight-color:transparent}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:3px}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:var(--bg1);border-bottom:1px solid var(--brd);min-height:56px;flex-shrink:0}
+.hdr h1{font-size:18px;font-weight:700}.hdr h1 b{color:var(--acc)}
+.badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px}
+.badge.g{background:rgba(16,185,129,.12);color:var(--grn)}.badge.y{background:rgba(245,158,11,.12);color:var(--yel)}.badge.r{background:rgba(239,68,68,.12);color:var(--red)}.badge.p{background:rgba(139,92,246,.12);color:var(--pur)}.badge.b{background:rgba(59,130,246,.12);color:var(--acc)}
+.main{flex:1;overflow-y:auto;padding:16px;padding-bottom:84px;min-height:0}
+.bnav{display:flex;justify-content:space-around;background:var(--bg1);border-top:1px solid var(--brd);padding:6px 0 max(8px,env(safe-area-inset-bottom));min-height:56px;flex-shrink:0}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 8px;border-radius:8px;cursor:pointer;color:var(--t3);font-size:10px;font-weight:500;border:none;background:none;position:relative;min-width:44px}
+.ni:hover,.ni.on{color:var(--acc)}.ni svg{width:20px;height:20px}
+.nb{position:absolute;top:-2px;right:0px;min-width:15px;height:15px;background:var(--red);border-radius:8px;font-size:9px;font-weight:700;display:none;align-items:center;justify-content:center;color:#fff;padding:0 3px}
+.card{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.sg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.st{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:14px;text-align:center}
+.sl{font-size:10px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.sv{font-size:20px;font-weight:700;letter-spacing:-.5px}
+.ss{font-size:10px;color:var(--t3);margin-top:3px}
+.vi{display:flex;gap:10px;padding:10px 12px;background:var(--bg2);border-radius:8px;border-left:3px solid var(--red);font-size:12px;margin-bottom:6px;line-height:1.5}
+.vi.w{border-left-color:var(--yel)}
+.vt{font-weight:700;color:var(--acc);margin-right:3px}
+.pc{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:14px;margin-bottom:10px;cursor:pointer;transition:.15s ease}
+.pc:hover{border-color:var(--acc)}
+.pt{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.pk{font-size:17px;font-weight:700}
+.ps{font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;text-transform:uppercase}
+.ps.bgu{background:rgba(139,92,246,.12);color:var(--pur)}.ps.pp{background:rgba(6,182,212,.12);color:var(--cyn)}.ps.hve{background:rgba(249,115,22,.12);color:var(--ora)}
+.pm{display:flex;gap:14px;font-size:12px;color:var(--t2);margin-bottom:8px;flex-wrap:wrap}
+.pb{display:flex;justify-content:space-between;align-items:center}
+.tb{font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;background:rgba(59,130,246,.15);color:var(--acc);margin-left:6px}
+.fg{margin-bottom:14px}.fl{display:block;font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px}
+.fi,.fs,.fta{width:100%;padding:10px 12px;background:var(--bg1);border:1px solid var(--brd);border-radius:8px;color:var(--t1);font-size:14px;font-family:inherit;outline:none}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--acc)}.fs{cursor:pointer;-webkit-appearance:none}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.fh{font-size:10px;color:var(--t3);margin-top:3px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;border:none;width:100%;transition:.15s}
+.bp{background:var(--acc);color:#fff}.bp:hover{background:#2563eb}
+.bs{background:var(--bg1);color:var(--t1);border:1px solid var(--brd)}.bd{background:var(--red);color:#fff}.bg{background:var(--grn);color:#fff}
+.bsm{padding:6px 12px;font-size:12px;width:auto}
+.br{display:flex;gap:8px;margin-top:10px}.br .btn{flex:1}
+.dr{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--brd)}.dl{font-size:12px;color:var(--t3)}.dv{font-size:13px;font-weight:600}
+.ci{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--bg2);border-radius:8px;margin-bottom:8px;border:1px solid var(--brd);cursor:pointer}
+.cb{width:22px;height:22px;border:2px solid var(--brd);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:.15s}
+.ci.ck .cb{background:var(--grn);border-color:var(--grn)}.ci.ck .cb::after{content:"✓";color:#fff;font-size:13px;font-weight:700}.ci.ck{opacity:.5}
+.tabs{display:flex;gap:4px;margin-bottom:16px;padding:3px;background:var(--bg1);border-radius:8px}
+.tab{flex:1;padding:7px;text-align:center;font-size:12px;font-weight:600;border-radius:6px;cursor:pointer;color:var(--t3);background:transparent;border:none;font-family:inherit}
+.tab.on{background:var(--acc);color:#fff}
+.es{text-align:center;padding:40px 20px;color:var(--t3)}.es .ei{font-size:40px;margin-bottom:12px}.es p{font-size:14px;line-height:1.6}
+.scr{display:none}.scr.on{display:block}
+.tst{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e3a5f;border:1px solid var(--acc);color:var(--t1);padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:500;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.tst.show{opacity:1}
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:200;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+.mo.show{display:flex}
+.mc{background:var(--bg1);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;padding:20px;animation:su .25s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.mt{font-size:16px;font-weight:700}
+.mx{background:none;border:none;color:var(--t3);font-size:28px;cursor:pointer;line-height:1}
+.co{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:250;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}.co.show{display:flex}
+.cx{background:var(--bg1);border-radius:var(--r);padding:24px;width:90%;max-width:360px;text-align:center}.cx p{font-size:14px;margin-bottom:16px;line-height:1.5}
+.hb{width:100%;height:8px;background:var(--bg1);border-radius:4px;overflow:hidden;margin-top:6px}
+.hf{height:100%;border-radius:4px;transition:width .4s}
+.hl{display:flex;justify-content:space-between;margin-top:3px;font-size:10px;color:var(--t3)}
+.sh{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+/* Strategy page styles */
+.strat-section{background:var(--bg2);border:1px solid var(--brd);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.strat-h1{font-size:16px;font-weight:700;color:var(--acc);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.strat-h2{font-size:13px;font-weight:700;color:var(--t1);margin:10px 0 6px;text-transform:uppercase;letter-spacing:.3px}
+.strat-p{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:6px}
+.strat-li{font-size:12px;color:var(--t2);line-height:1.6;padding-left:14px;position:relative}
+.strat-li::before{content:"•";position:absolute;left:0;color:var(--acc)}
+.strat-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;text-transform:uppercase;margin:2px 2px 6px 0}
+.tag-r{background:rgba(239,68,68,.15);color:var(--red)}.tag-y{background:rgba(245,158,11,.15);color:var(--yel)}.tag-g{background:rgba(16,185,129,.15);color:var(--grn)}.tag-b{background:rgba(59,130,246,.15);color:var(--acc)}.tag-p{background:rgba(139,92,246,.15);color:var(--pur)}
+.rtable{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+.rtable th{text-align:left;padding:6px 8px;color:var(--t3);font-weight:600;border-bottom:1px solid var(--brd)}
+.rtable td{padding:6px 8px;border-bottom:1px solid rgba(42,53,80,.5);color:var(--t2)}
+.rtable tr:last-child td{border-bottom:none}
+@media(min-width:600px){.sg{grid-template-columns:repeat(3,1fr)}.main{max-width:700px;margin:0 auto;padding:20px 24px 84px}}
+@media(min-width:900px){.sg{grid-template-columns:repeat(4,1fr)}.main{max-width:800px}}
+
+.sync-bar{display:flex;align-items:center;gap:6px;padding:6px 12px;background:var(--bg2);border-bottom:1px solid var(--brd);font-size:11px;color:var(--t3)}
+.sync-bar .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+</head>
+<body>
+<div class="app">
+<header class="hdr"><h1>Trade<b>Path</b></h1><div id="hReg" class="badge b">No Regime</div></header>
+<main class="main" id="mainC">
+
+<!-- DASHBOARD -->
+<div id="sDash" class="scr on">
+<div class="sg" id="dSt"></div>
+<div style="display:flex;gap:8px;margin-bottom:16px">
+  <button class="btn bp" style="flex:1" onclick="go('sAdd')">+ New Position</button>
+  <button class="btn bs" style="flex:1" onclick="shUpdBal()">💰 Update Balance</button>
+</div>
+<div id="dVio"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sh">Active Violations</span><span id="vCt" style="font-size:12px;color:var(--red);font-weight:700"></span></div><div id="vList"></div></div>
+<div id="dStats" style="margin-top:14px"></div>
+<div style="margin-top:14px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sh">Open Positions</span></div><div id="dPos"></div></div>
+</div>
+
+<!-- POSITIONS -->
+<div id="sPos" class="scr">
+<div class="tabs"><button class="tab on" onclick="fPos('open',this)">Open</button><button class="tab" onclick="fPos('closed',this)">Closed</button><button class="tab" onclick="fPos('all',this)">All</button></div>
+<div id="pList"></div>
+<button class="btn bp" style="margin-top:12px" onclick="go('sAdd')">+ Add Position</button>
+</div>
+
+<!-- ADD POSITION -->
+<div id="sAdd" class="scr">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><button class="btn bs bsm" onclick="go('sDash')" style="width:auto">← Back</button><h2 style="font-size:17px;font-weight:700">New Position</h2></div>
+<div id="eWarn"></div>
+<form id="aForm" onsubmit="return savPos(event)">
+<div class="fr"><div class="fg"><label class="fl">Ticker</label><input class="fi" id="fTk" required placeholder="AAPL" style="text-transform:uppercase"></div>
+<div class="fg"><label class="fl">Setup Type</label><select class="fs" id="fSt" required onchange="valEntry()"><option value="">Select...</option><option>BGU</option><option>PP</option><option>HVE</option><option value="NoSetup">No Setup</option></select></div></div>
+<div class="fr3"><div class="fg"><label class="fl">Entry Price</label><input class="fi" id="fEp" type="number" step="0.01" required placeholder="0.00" oninput="calcSh()"></div>
+<div class="fg"><label class="fl">Stop Price</label><input class="fi" id="fSp" type="number" step="0.01" required placeholder="0.00" oninput="calcSh()"></div>
+<div class="fg"><label class="fl">Shares</label><input class="fi" id="fSh" type="number" required placeholder="Auto"><div class="fh" id="shH"></div></div></div>
+<div class="fr"><div class="fg"><label class="fl">Tranche</label><select class="fs" id="fTr" onchange="calcSh()"><option value="T1">T1 — Initial</option><option value="T2">T2 — Add #1</option><option value="T3">T3 — Add #2</option></select></div>
+<div class="fg"><label class="fl">Parent Ticker (T2/T3)</label><input class="fi" id="fPa" placeholder="If add-on"></div></div>
+<div class="fr"><div class="fg"><label class="fl">Sector</label><select class="fs" id="fSe"><option value="">Select...</option><option>Technology</option><option>Healthcare</option><option>Financials</option><option>Consumer Discretionary</option><option>Consumer Staples</option><option>Energy</option><option>Industrials</option><option>Materials</option><option>Real Estate</option><option>Utilities</option><option>Communication Services</option></select></div>
+<div class="fg"><label class="fl">Entry Zone</label><select class="fs" id="fZo"><option value="">N/A</option><optgroup label="HVE Zones"><option value="VS">Volume Support (VS)</option><option value="WN+VS">Whole Number + VS</option><option value="HVC">High Volume Close (HVC)</option></optgroup><optgroup label="BGU Zones"><option value="GDL">Gap Day Low (pullback)</option><option value="GDH">Gap Day High (breakout)</option></optgroup><optgroup label="PP Zones"><option value="10SMA">10 SMA</option><option value="21EMA">21 EMA</option><option value="50DMA">50 DMA</option><option value="PDH">PP Day High (breakout)</option></optgroup><optgroup label="General"><option value="620">620 MACD (intraday)</option><option value="MA-PB">Moving Avg Pullback</option><option value="BO">Base Breakout</option></optgroup></select></div></div>
+<div class="fr3"><div class="fg"><label class="fl">Entry Date</label><input class="fi" id="fDt" type="date"></div>
+<div class="fg"><label class="fl">10 SMA Start</label><input class="fi" id="fSm" type="date"></div>
+<div class="fg"><label class="fl">Earnings Date</label><input class="fi" id="fEd" type="date"></div></div>
+<div class="fg"><label class="fl">Notes</label><input class="fi" id="fNo" placeholder="Optional setup notes..."></div>
+<button type="submit" class="btn bp">Save Position</button>
+<button type="button" class="btn bs" style="margin-top:8px" onclick="go('sDash')">Cancel</button>
+</form>
+</div>
+
+<!-- DETAIL -->
+<div id="sDet" class="scr">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><button class="btn bs bsm" onclick="go('sPos')" style="width:auto">← Back</button><h2 id="dTi" style="font-size:17px;font-weight:700"></h2></div>
+<div id="dCon"></div><div id="dVi2" style="margin-top:16px"></div>
+<div class="br"><button class="btn bs" onclick="editPos()">Edit</button><button class="btn bg" onclick="updPrice()">Update Price</button></div>
+<div class="br"><button class="btn bd" onclick="closePos()">Close Position</button></div>
+<div class="br"><button class="btn bs" style="margin-top:4px;color:var(--t3);font-size:12px" onclick="delPos()">Delete Position</button></div>
+</div>
+
+<!-- REGIME -->
+<div id="sReg" class="scr">
+<h2 style="font-size:18px;font-weight:700;margin-bottom:16px">Market Regime</h2>
+<div class="card" id="rCard"></div>
+<h3 style="font-size:12px;font-weight:700;margin:16px 0 12px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">Log Today's Data</h3>
+<form id="rForm" onsubmit="return savReg(event)">
+<div class="fr"><div class="fg"><label class="fl">Regime Date</label><input class="fi" id="rDt" type="date"><div class="fh">Defaults to today</div></div>
+<div class="fg"><label class="fl">FTD Active?</label><select class="fs" id="rFt"><option value="0">No</option><option value="1">Yes — FTD Confirmed</option></select></div></div>
+<div class="card" style="margin:12px 0;padding:12px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="sh">Score Calculator</div><label style="font-size:11px;color:var(--t3);cursor:pointer"><input type="checkbox" id="rManual" onchange="togRegMode()"> Manual score</label></div>
+<div id="regCalc">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+<div style="text-align:center;font-size:12px;font-weight:600;color:var(--acc)">SPY</div>
+<div style="text-align:center;font-size:12px;font-weight:600;color:var(--acc)">QQQ</div></div>
+<div class="fr"><div class="fg"><label class="fl">SPY Acc Days</label><input class="fi" id="rSA" type="number" min="0" value="0" onchange="calcScore()"></div>
+<div class="fg"><label class="fl">QQQ Acc Days</label><input class="fi" id="rQA" type="number" min="0" value="0" onchange="calcScore()"></div></div>
+<div class="fr"><div class="fg"><label class="fl">SPY Dist Days</label><input class="fi" id="rSD" type="number" min="0" value="0" onchange="calcScore()"></div>
+<div class="fg"><label class="fl">QQQ Dist Days</label><input class="fi" id="rQD" type="number" min="0" value="0" onchange="calcScore()"></div></div>
+<div class="fr"><div class="fg"><label class="fl">SPY vs 50 SMA</label><select class="fs" id="rS5" onchange="calcScore()"><option value="1">Above</option><option value="0">Below</option></select></div>
+<div class="fg"><label class="fl">QQQ vs 50 SMA</label><select class="fs" id="rQ5" onchange="calcScore()"><option value="1">Above</option><option value="0">Below</option></select></div></div>
+<div style="text-align:center;margin:8px 0;padding:8px;border-radius:8px;background:var(--sf)"><span style="font-size:11px;color:var(--t3)">Calculated Score: </span><span id="calcSc" style="font-size:18px;font-weight:700;color:var(--acc)">0.0</span></div>
+</div>
+<div id="regMan" style="display:none">
+<div class="fg"><label class="fl">Blended Score</label><input class="fi" id="rSc" type="number" step="0.5" placeholder="+1.5"><div class="fh">Strong Up ≥+2 | Chop 0 to -2 | Correction ≤-2</div></div>
+</div></div>
+<div class="fr"><div class="fg"><label class="fl">Dist Days (Max SPY/QQQ)</label><input class="fi" id="rDi" type="number" required placeholder="4"></div>
+<div class="fg"><label class="fl">SPY-QQQ Gap (%)</label><input class="fi" id="rGa" type="number" step="0.1" placeholder="0.8"><div class="fh">≥1.5% = divergence penalty</div></div></div>
+<button type="submit" class="btn bp">Save Regime</button></form>
+<div style="margin-top:20px"><div class="sh" style="margin-bottom:10px">Regime History</div><div id="rHist"></div></div>
+</div>
+
+<!-- EXIT CHECKLIST -->
+<div id="sChk" class="scr">
+<h2 style="font-size:18px;font-weight:700;margin-bottom:4px">Evening Exit Check</h2>
+<p style="font-size:12px;color:var(--t3);margin-bottom:16px">8-step hierarchy — work top-down for each position</p>
+<div id="chSel" style="margin-bottom:12px"></div><div id="chSt"></div>
+</div>
+
+<!-- JOURNAL -->
+<div id="sJrn" class="scr">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h2 style="font-size:18px;font-weight:700">Journal</h2><div style="display:flex;gap:6px"><button class="btn bp bsm" onclick="jrnForm()">+ Entry</button><button class="btn bs bsm" onclick="clrJrn()">Clear</button></div></div>
+<div id="jList"></div>
+</div>
+
+<!-- PERFORMANCE -->
+<div id="sPerf" class="scr">
+<h2 style="font-size:18px;font-weight:700;margin-bottom:16px">Performance</h2>
+<div class="sg" id="pSt"></div>
+<div class="card"><div class="sh" style="margin-bottom:10px">Win Rate by Setup</div><div id="pSet"></div></div>
+<div class="card"><div class="sh" style="margin-bottom:10px">Quarterly Targets</div><div id="pQ"></div></div>
+<div class="card"><div class="sh" style="margin-bottom:10px">Recent Trades</div><div id="pRec"></div></div>
+</div>
+
+<!-- STRATEGY REFERENCE -->
+<div id="sStrat" class="scr">
+<h2 style="font-size:18px;font-weight:700;margin-bottom:16px">Strategy Reference</h2>
+
+<div class="strat-section">
+<div class="strat-h1">📐 Core Identity</div>
+<p class="strat-p">Swing trader. Holds 6–10 trading days on average. Uses technical analysis with emphasis on volume, moving averages, and momentum. Operates in defined-risk structures with strict regime gating.</p>
+<p class="strat-p"><strong style="color:var(--t1)">Account:</strong> ~$10K–$20K | <strong style="color:var(--t1)">Risk/Trade:</strong> 0.5% standard | <strong style="color:var(--t1)">Hold Window:</strong> 6–10 days</p>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">🌡 Regime Ladder</div>
+<table class="rtable">
+<tr><th>Regime</th><th>Max Pos</th><th>Size</th><th>Pyramid</th><th>Heat Cap</th></tr>
+<tr><td><span style="color:var(--grn);font-weight:600">Strong Uptrend</span></td><td>15</td><td>100%</td><td>T1+T2+T3</td><td>6%</td></tr>
+<tr><td><span style="color:var(--cyn);font-weight:600">Strong but Late</span></td><td>12</td><td>100%</td><td>T1+T2</td><td>6%</td></tr>
+<tr><td><span style="color:var(--acc);font-weight:600">Uptrend</span></td><td>12</td><td>100%</td><td>T1+T2</td><td>4.5%</td></tr>
+<tr><td><span style="color:var(--yel);font-weight:600">Under Pressure</span></td><td>6</td><td>75%</td><td>T1 only</td><td>3%</td></tr>
+<tr><td><span style="color:var(--ora);font-weight:600">Choppy</span></td><td>6</td><td>50%</td><td>T1 only</td><td>2%</td></tr>
+<tr><td><span style="color:var(--red);font-weight:600">Correction</span></td><td>2</td><td>25%</td><td>None</td><td>0.5%</td></tr>
+<tr><td><span style="color:var(--pur);font-weight:600">FTD Triggered</span></td><td>2</td><td>25%</td><td>None</td><td>0.5%</td></tr>
+</table>
+<div class="strat-h2" style="margin-top:12px">Regime Inputs</div>
+<p class="strat-li">Blended Score: average of SPY, QQQ, IWM, MDY momentum/trend signals</p>
+<p class="strat-li">Distribution Days: max of SPY or QQQ count (≥6 = pressure flag)</p>
+<p class="strat-li">SPY-QQQ Gap: ≥1.5% divergence drops regime one tier</p>
+<p class="strat-li">FTD: Follow-Through Day confirmation — only PP/HVE pilots allowed</p>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">🎯 Setup Definitions</div>
+<div class="strat-h2">BGU — Base Breakout</div>
+<p class="strat-li">Institutional accumulation base (3+ weeks) with constructive price/volume action</p>
+<p class="strat-li">Entry: break above base highs on volume ≥1.5× avg</p>
+<p class="strat-li">Confirmation: close above entry, RS making new highs</p>
+<p class="strat-li">Forbidden: Choppy, Under Pressure, Correction, FTD regimes</p>
+<div class="strat-h2" style="margin-top:10px">PP — Pocket Pivot</div>
+<p class="strat-li">Volume on up day exceeds any down-day volume over prior 10 days</p>
+<p class="strat-li">Entry: near or at rising 10 SMA</p>
+<p class="strat-li">Must not be within 5 days of earnings (binary event rule)</p>
+<p class="strat-li">Allowed in all regimes except Correction</p>
+<div class="strat-h2" style="margin-top:10px">HVE — High Volume Extension</div>
+<p class="strat-li">Entry Zones: Volume Support (VS), Whole Number + VS, High Volume Close (HVC)</p>
+<p class="strat-li">Only allowed in Uptrend or better; forbidden below Under Pressure</p>
+<p class="strat-li">Always use defined stop at zone low</p>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">📏 Position Sizing</div>
+<p class="strat-p">Risk per trade = Account × Risk% × Regime Modifier</p>
+<p class="strat-p" style="font-family:monospace;color:var(--acc)">Shares = (Account × Risk% × Mod) ÷ (Entry − Stop)</p>
+<table class="rtable" style="margin-top:8px">
+<tr><th>Tranche</th><th>Size vs T1</th><th>Condition</th></tr>
+<tr><td>T1 — Initial</td><td>100%</td><td>Setup confirmed at entry zone</td></tr>
+<tr><td>T2 — Add #1</td><td>50%</td><td>+1R profit, still in regime, trending</td></tr>
+<tr><td>T3 — Add #2</td><td>25%</td><td>+2R profit, Strong Uptrend only</td></tr>
+</table>
+<p class="strat-li" style="margin-top:8px">Max single position: 20% of account</p>
+<p class="strat-li">Max sector concentration: 40% of open positions</p>
+<p class="strat-li">Max daily entries: 5</p>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">🚪 Exit Hierarchy (Top-Down)</div>
+<div class="strat-h2">Step 1 — Hard Stop</div>
+<p class="strat-li">Price trades through stop level intraday → exit that tranche immediately. Non-negotiable.</p>
+<div class="strat-h2" style="margin-top:8px">Step 2 — Grateful Dead</div>
+<p class="strat-li">RS line crosses below 50-day RS SMA → EXIT EVERYTHING in the position</p>
+<p class="strat-li">Overrides all other rules including embedded profit</p>
+<div class="strat-h2" style="margin-top:8px">Step 3 — 3 ATR Extension</div>
+<p class="strat-li">Daily low ≥ 3×ATR(14) above 21 EMA → trim add-ons into strength</p>
+<p class="strat-li">Move T1 stop up to extension day low</p>
+<div class="strat-h2" style="margin-top:8px">Step 4 — Quicksand</div>
+<p class="strat-li">RS below 21 RS SMA for 3+ consecutive days and declining → sell T3 + T2</p>
+<p class="strat-li">Hold T1 or half T1, trail on 7-Week Rule or 50 DMA</p>
+<div class="strat-h2" style="margin-top:8px">Step 5 — Quick Exit</div>
+<p class="strat-li">RS crosses below 21-day RS SMA → sell T3 if pyramided</p>
+<p class="strat-li">T1-only positions: warning flag, no immediate action</p>
+<div class="strat-h2" style="margin-top:8px">Step 6 — R-Multiple Targets</div>
+<p class="strat-li">+3R → sell T3 (or ½ of T1 if no add-ons)</p>
+<p class="strat-li">+5R → sell T2. Check if Steps 3/4 already trimmed first.</p>
+<div class="strat-h2" style="margin-top:8px">Step 7 — 7-Week Rule</div>
+<p class="strat-li">Closes below 10 SMA AND next day breaks that day's low → sell T1</p>
+<p class="strat-li">Activates after 35 trading days of 10 SMA obedience</p>
+<p class="strat-li">Pre-35 days: switch to 50 DMA trail on violation</p>
+<div class="strat-h2" style="margin-top:8px">Step 8 — Time Stop</div>
+<p class="strat-li">Days 8–12: forced review — exit if drifting, extend 5 days if constructive</p>
+<p class="strat-li">Day 13+: mandatory exit if not at +1R. Capital is dead.</p>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">⚖️ Earnings Protocol</div>
+<table class="rtable">
+<tr><th>Cushion (unrealized %)</th><th>Action</th></tr>
+<tr><td><span style="color:var(--grn)">≥15%</span></td><td>Hold full position through earnings</td></tr>
+<tr><td><span style="color:var(--acc)">5–14%</span></td><td>TRIM TO ½ before earnings day</td></tr>
+<tr><td><span style="color:var(--yel)">0–4%</span></td><td>TRIM TO ¼ before earnings day</td></tr>
+<tr><td><span style="color:var(--red)">&lt; 0%</span></td><td>EXIT ENTIRELY — no cushion to absorb miss</td></tr>
+</table>
+<p class="strat-li" style="margin-top:8px">PP setups: never enter within 5 calendar days of earnings</p>
+<p class="strat-li">All setups: re-evaluate full sizing after gap open on earnings day</p>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">🛡 Portfolio Guardrails</div>
+<div class="strat-h2">Consecutive Loss Rule</div>
+<p class="strat-li"><span class="strat-tag tag-y">3 stops</span> Pause 2 trading days. Review all losses for common patterns.</p>
+<p class="strat-li"><span class="strat-tag tag-r">5 stops</span> Pause 5 trading days. Resume one tier lower for next 10 trades.</p>
+<div class="strat-h2" style="margin-top:8px">Weekly P&L Drawdown</div>
+<p class="strat-li"><span class="strat-tag tag-r">−2% in one week</span> Stop trading for the rest of the week. No new entries until Monday.</p>
+<div class="strat-h2" style="margin-top:8px">Post-Big-Win Rule</div>
+<p class="strat-li">After closing a ≥+5R winner: take 1 full trading day off from new entries</p>
+<div class="strat-h2" style="margin-top:8px">Quarterly Graduation</div>
+<table class="rtable" style="margin-top:6px">
+<tr><th>Q Return</th><th>Next Quarter Risk%</th></tr>
+<tr><td>+15–25%</td><td>Move from 0.5% → 0.75%</td></tr>
+<tr><td>+35–50%</td><td>Move to 1.0%</td></tr>
+<tr><td>+60–75%</td><td>Move to 1.25%</td></tr>
+<tr><td>Drawdown &gt;10%</td><td>Step back one tier</td></tr>
+</table>
+</div>
+
+<div class="strat-section">
+<div class="strat-h1">📅 Weekly Routine</div>
+<div class="strat-h2">Sunday (60 min)</div>
+<p class="strat-li">Review all closed trades from the week — P&L, R-multiples, rule compliance</p>
+<p class="strat-li">Score each entry/exit 1–5 for adherence</p>
+<p class="strat-li">Scan for 5–7 watchlist candidates; set alerts</p>
+<p class="strat-li">Log regime assessment with 4 market inputs</p>
+<div class="strat-h2" style="margin-top:8px">Daily Pre-Market (15 min)</div>
+<p class="strat-li">Check open positions against the 8-step exit checklist</p>
+<p class="strat-li">Update current prices and stops</p>
+<p class="strat-li">Log earnings dates for all held positions</p>
+<div class="strat-h2" style="margin-top:8px">Daily Post-Close (10 min)</div>
+<p class="strat-li">Update position prices in app</p>
+<p class="strat-li">Run violation engine — act on any red flags same evening</p>
+<p class="strat-li">Journal any entries, exits, or notable observations</p>
+</div>
+
+</div><!-- end sStrat -->
+
+<!-- SETTINGS -->
+<div id="sSet" class="scr">
+<h2 style="font-size:18px;font-weight:700;margin-bottom:16px">Settings</h2>
+<form id="setForm" onsubmit="return savSet(event)">
+<div class="fr"><div class="fg"><label class="fl">Current Account Size ($)</label><input class="fi" id="xAc" type="number" step="100" required><div class="fh">Used for risk calculations and heat cap</div></div>
+<div class="fg"><label class="fl">YTD Baseline ($)</label><input class="fi" id="xBl" type="number" step="100" required><div class="fh">Starting balance for return % calc</div></div></div>
+<div class="fr"><div class="fg"><label class="fl">Risk Per Trade (%)</label><input class="fi" id="xRi" type="number" step="0.05" required><div class="fh">0.5 = 0.5% of account</div></div>
+<div class="fg"><label class="fl">Heat Cap (%)</label><input class="fi" id="xHe" type="number" step="0.5" required></div></div>
+<div class="fr"><div class="fg"><label class="fl">Max Entries/Day</label><input class="fi" id="xMx" type="number" required></div>
+<div class="fg"><label class="fl">Max Sector Conc. (%)</label><input class="fi" id="xSc" type="number" step="5" required></div></div>
+<div class="fg"><label class="fl">Max Single Position (%)</label><input class="fi" id="xMp" type="number" step="5" required></div>
+<button type="submit" class="btn bp">Save Settings</button></form>
+<div style="margin-top:24px"><div class="sh" style="margin-bottom:10px">Cloud Sync</div>
+<div id="syncStatus" class="card" style="padding:12px;margin-bottom:10px">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div id="syncDot" style="width:10px;height:10px;border-radius:50%;background:var(--red)"></div><span id="syncLabel" style="font-size:13px;font-weight:600;color:var(--t2)">Not signed in</span></div>
+<div id="authFormWrap">
+<div class="fg" style="margin-bottom:8px"><label class="fl">Email</label><input class="fi" id="authEmail" type="email" placeholder="you@email.com"></div>
+<div class="fg" style="margin-bottom:8px"><label class="fl">Password</label><input class="fi" id="authPass" type="password" placeholder="Min 6 characters"></div>
+<div class="br" style="margin-top:4px"><button class="btn bp" style="flex:1" onclick="doLogin()">Sign In</button><button class="btn bs" style="flex:1" onclick="doSignup()">Create Account</button></div>
+<div class="fh" style="margin-top:6px">Sign in on all devices to sync automatically</div>
+</div>
+<div id="authSignedIn" style="display:none">
+<div style="font-size:12px;color:var(--t3);margin-bottom:8px">Signed in as <span id="authUserEmail" style="color:var(--acc)"></span></div>
+<button class="btn bs" onclick="doLogout()">Sign Out</button>
+</div>
+</div>
+<div style="margin-top:24px"><div class="sh" style="margin-bottom:10px">Data Management</div>
+<button class="btn bs" style="margin-bottom:8px" onclick="expData()">📤 Export All Data (JSON)</button>
+<button class="btn bs" style="margin-bottom:8px" onclick="expCSV()">📊 Export Trades (CSV)</button>
+<button class="btn bs" style="margin-bottom:8px" onclick="document.getElementById('impF').click()">📥 Import Data (JSON)</button>
+<input type="file" id="impF" accept=".json" style="display:none" onchange="impData(event)">
+<button class="btn bd" onclick="rstData()">🗑 Reset All Data</button></div>
+</div>
+
+</main>
+
+<!-- BOTTOM NAV — 7 items -->
+<nav class="bnav">
+<button class="ni on" onclick="go('sDash',this)" data-s="sDash"><div style="position:relative"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nb" id="nBdg"></span></div><span>Home</span></button>
+<button class="ni" onclick="go('sPos',this)" data-s="sPos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="18" rx="2"/><line x1="2" y1="9" x2="22" y2="9"/><line x1="12" y1="9" x2="12" y2="21"/></svg><span>Trades</span></button>
+<button class="ni" onclick="go('sChk',this)" data-s="sChk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><span>Exit</span></button>
+<button class="ni" onclick="go('sReg',this)" data-s="sReg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Regime</span></button>
+<button class="ni" onclick="go('sPerf',this)" data-s="sPerf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Stats</span></button>
+<button class="ni" onclick="go('sStrat',this)" data-s="sStrat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>Strategy</span></button>
+<button class="ni" onclick="go('sSet',this)" data-s="sSet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></button>
+</nav>
+
+<div class="tst" id="tst"></div>
+<div class="co" id="cfo"><div class="cx"><p id="cfm"></p><div class="br"><button class="btn bs" onclick="hideCf()">Cancel</button><button class="btn bd" id="cfb">Confirm</button></div></div></div>
+<div class="mo" id="mol"><div class="mc"><div class="mh"><span class="mt" id="moTi"></span><button class="mx" onclick="hideMo()">&times;</button></div><div id="moCo"></div></div></div>
+</div>
+
+<script>
+
+window.onerror=function(msg,src,line){console.error('TP Error:',msg,'line:',line);return false;};
+
+/* ===== FIREBASE CONFIG ===== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCPRq6bqXGxR4hnAER0IOOJooE2mFdKayc",
+  authDomain: "tradepath-38581.firebaseapp.com",
+  databaseURL: "https://tradepath-38581-default-rtdb.firebaseio.com",
+  projectId: "tradepath-38581",
+  storageBucket: "tradepath-38581.firebasestorage.app",
+  messagingSenderId: "92817229043",
+  appId: "1:92817229043:web:9138c748c64360d4d1e386"
+};
+firebase.initializeApp(firebaseConfig);
+const fbAuth = firebase.auth();
+const fbDB = firebase.database();
+let fbUID = null;
+let fbListeners = [];
+let _syncPaused = false;
+
+function genId(){return Date.now().toString(36)+Math.random().toString(36).substr(2,5);}
+
+function uRef(path){
+  if(!fbUID) throw new Error('Not signed in');
+  return fbDB.ref('users/'+fbUID+'/'+path);
+}
+
+/* ===== DB LAYER (same signatures as original) ===== */
+function odb(){
+  return new Promise(function(ok){
+    fbDB.ref('.info/connected').on('value',function(snap){
+      var dot=document.getElementById('syncDot');
+      var lbl=document.getElementById('syncLabel');
+      if(dot&&fbUID){
+        dot.style.background=snap.val()?'var(--grn)':'var(--yel)';
+        if(lbl) lbl.textContent=snap.val()?'Syncing':'Offline (cached)';
+      }
+    });
+    ok();
+  });
+}
+
+function dPut(s,d){
+  if(!fbUID){
+    console.warn('dPut: not signed in, skipping');
+    return Promise.resolve();
+  }
+  _syncPaused=true;
+  var clone=JSON.parse(JSON.stringify(d));
+  var p;
+  if(s==='pos'||s==='jrn'){
+    if(!clone.id) clone.id=genId();
+    p=uRef(s+'/'+clone.id).set(clone);
+  } else if(s==='reg'){
+    p=uRef(s+'/'+clone.date).set(clone);
+  } else if(s==='cfg'){
+    p=uRef(s+'/'+clone.key).set(clone);
+  } else {
+    p=uRef(s).set(clone);
+  }
+  return p.then(function(){setTimeout(function(){_syncPaused=false;},500);}).catch(function(e){_syncPaused=false;throw e;});
+}
+
+function dGet(s,k){
+  if(!fbUID) return Promise.resolve(undefined);
+  return uRef(s+'/'+k).once('value').then(function(snap){return snap.val()||undefined;});
+}
+
+function dAll(s){
+  if(!fbUID) return Promise.resolve([]);
+  return uRef(s).once('value').then(function(snap){
+    var v=snap.val();
+    if(!v) return [];
+    return Object.values(v);
+  });
+}
+
+function dClr(s){
+  if(!fbUID) return Promise.resolve();
+  _syncPaused=true;
+  return uRef(s).remove().then(function(){setTimeout(function(){_syncPaused=false;},500);});
+}
+
+function dDel(s,k){
+  if(!fbUID) return Promise.resolve();
+  _syncPaused=true;
+  return uRef(s+'/'+k).remove().then(function(){setTimeout(function(){_syncPaused=false;},500);});
+}
+
+/* ===== AUTH ===== */
+function updateAuthUI(user){
+  var formW=document.getElementById('authFormWrap');
+  var signedW=document.getElementById('authSignedIn');
+  var dot=document.getElementById('syncDot');
+  var lbl=document.getElementById('syncLabel');
+  var emailSpan=document.getElementById('authUserEmail');
+  if(user){
+    fbUID=user.uid;
+    if(formW)formW.style.display='none';
+    if(signedW)signedW.style.display='block';
+    if(emailSpan)emailSpan.textContent=user.email;
+    if(dot)dot.style.background='var(--grn)';
+    if(lbl)lbl.textContent='Syncing';
+  } else {
+    fbUID=null;
+    if(formW)formW.style.display='block';
+    if(signedW)signedW.style.display='none';
+    if(dot)dot.style.background='var(--red)';
+    if(lbl)lbl.textContent='Not signed in';
+  }
+}
+
+function setupRealtimeSync(){
+  fbListeners.forEach(function(fn){fn();});
+  fbListeners=[];
+  if(!fbUID) return;
+  var stores=['pos','reg','jrn','cfg'];
+  stores.forEach(function(s){
+    var ref=uRef(s);
+    var fn=ref.on('value',function(){
+      if(_syncPaused) return;
+      try{ren();}catch(e){console.error('sync refresh:',e);}
+    });
+    fbListeners.push(function(){ref.off('value',fn);});
+  });
+}
+
+async function doLogin(){
+  var email=document.getElementById('authEmail').value.trim();
+  var pass=document.getElementById('authPass').value;
+  if(!email||!pass){tst('Enter email and password');return;}
+  try{
+    await fbAuth.signInWithEmailAndPassword(email,pass);
+    tst('Signed in \u2714');
+  }catch(e){
+    if(e.code==='auth/user-not-found'){tst('No account found \u2014 click Create Account');}
+    else if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential'){tst('Wrong password');}
+    else{tst('Error: '+e.message);}
+  }
+}
+
+async function doSignup(){
+  var email=document.getElementById('authEmail').value.trim();
+  var pass=document.getElementById('authPass').value;
+  if(!email||!pass){tst('Enter email and password');return;}
+  if(pass.length<6){tst('Password must be at least 6 characters');return;}
+  try{
+    await fbAuth.createUserWithEmailAndPassword(email,pass);
+    tst('Account created & signed in \u2714');
+  }catch(e){
+    if(e.code==='auth/email-already-in-use'){tst('Account exists \u2014 use Sign In');}
+    else{tst('Error: '+e.message);}
+  }
+}
+
+async function doLogout(){
+  fbListeners.forEach(function(fn){fn();});
+  fbListeners=[];
+  await fbAuth.signOut();
+  tst('Signed out');
+}
+
+/* ===== SETTINGS ===== */
+const DS={acc:10000,baseline:10000,rsk:0.5,heat:6,maxE:5,maxS:40,maxP:20};
+let S={...DS};
+async function ldSet(){try{const s=await dGet('cfg','config');if(s)S={...DS,...s.value};if(!S.baseline)S.baseline=S.acc;}catch(e){console.error('ldSet',e);}}
+async function savSet(e){
+  e.preventDefault();
+  S.acc=+$('xAc').value;
+  S.baseline=+$('xBl').value;
+  S.rsk=+$('xRi').value;
+  S.heat=+$('xHe').value;
+  S.maxE=+$('xMx').value;
+  S.maxS=+$('xSc').value;
+  S.maxP=+$('xMp').value;
+  await dPut('cfg',{key:'config',value:S});
+  tst('Settings saved');ren();return false;}
+function popSet(){$('xAc').value=S.acc;$('xBl').value=S.baseline||S.acc;$('xRi').value=S.rsk;$('xHe').value=S.heat;$('xMx').value=S.maxE;$('xSc').value=S.maxS;$('xMp').value=S.maxP;}
+
+/* Update Balance modal on dashboard */
+function shUpdBal(){
+  shMo('Update Account Balance',`
+    <p style="font-size:12px;color:var(--t3);margin-bottom:14px">Enter your current total account value (cash + open position value). This updates both your risk calculation basis and equity display.</p>
+    <div class="fg"><label class="fl">Current Account Balance ($)</label><input class="fi" id="ubAc" type="number" step="100" value="${S.acc}" placeholder="${S.acc}"></div>
+    <div class="fg"><label class="fl">Update YTD Baseline too?</label><select class="fs" id="ubBl"><option value="0">No — keep current baseline (${f$(S.baseline||S.acc)})</option><option value="1">Yes — reset baseline to this value (new YTD period)</option></select></div>
+    <button class="btn bp" style="margin-top:4px" onclick="saveUpdBal()">Save Balance</button>
+  `);}
+async function saveUpdBal(){
+  const newAcc=+$('ubAc').value;
+  if(!newAcc||newAcc<100){tst('Enter a valid balance');return;}
+  S.acc=newAcc;
+  if($('ubBl').value==='1')S.baseline=newAcc;
+  await dPut('cfg',{key:'config',value:S});
+  hideMo();tst('Balance updated to '+f$(newAcc));ren();}
+
+/* ===== REGIME ===== */
+const RC={
+'Strong Uptrend':{mp:15,st:['BGU','PP','HVE','UoV','NoSetup'],sm:1,py:'T1+T2+T3',hc:6,cl:'color:var(--grn)'},
+'Strong but Late':{mp:12,st:['BGU','PP','HVE','UoV','NoSetup'],sm:1,py:'T1+T2',hc:6,cl:'color:var(--cyn)'},
+'Uptrend':{mp:12,st:['BGU','PP','HVE','UoV','NoSetup'],sm:1,py:'T1+T2',hc:4.5,cl:'color:var(--acc)'},
+'Uptrend Under Pressure':{mp:6,st:['PP','HVE','NoSetup'],sm:.75,py:'T1 only',hc:3,cl:'color:var(--yel)'},
+'Choppy / Pressured':{mp:6,st:['PP','NoSetup'],sm:.5,py:'T1 only',hc:2,cl:'color:var(--ora)'},
+'Correction':{mp:2,st:['NoSetup'],sm:.25,py:'None',hc:.5,cl:'color:var(--red)'},
+'FTD Triggered':{mp:2,st:['PP','HVE','NoSetup'],sm:.25,py:'None',hc:.5,cl:'color:var(--pur)'}};
+function cReg(sc,di,ga,ft){if(ga>=1.5){const b=cRegB(sc,di,ft);return dropT(b);}return cRegB(sc,di,ft);}
+function calcScore(){var sa=+(($('rSA')||{}).value||0),sd=+(($('rSD')||{}).value||0);var qa=+(($('rQA')||{}).value||0),qd=+(($('rQD')||{}).value||0);var s5=+(($('rS5')||{}).value||1),q5=+(($('rQ5')||{}).value||1);var spyNet=sa-sd;var qqNet=qa-qd;var spyScore=(spyNet>=3?1.5:spyNet>=1?1:spyNet>=0?0.5:spyNet>=-2?-0.5:-1.5)+(s5?0.5:-0.5);var qqScore=(qqNet>=3?1.5:qqNet>=1?1:qqNet>=0?0.5:qqNet>=-2?-0.5:-1.5)+(q5?0.5:-0.5);var bl=Math.round(((spyScore+qqScore)/2)*2)/2;var el=$('calcSc');if(el){el.textContent=bl>=0?'+'+bl.toFixed(1):bl.toFixed(1);el.style.color=bl>=2?'var(--grn)':bl>0?'var(--acc)':bl>-2?'var(--ora)':'var(--red)';}return bl;}
+function getCalcScore(){return calcScore();}
+function togRegMode(){var m=$('rManual').checked;$('regCalc').style.display=m?'none':'';$('regMan').style.display=m?'':'none';}
+
+function cRegB(sc,di,ft){if(sc<=-2)return ft?'FTD Triggered':'Correction';if(sc>-2&&sc<=0)return 'Choppy / Pressured';if(sc>0&&sc<2&&di>=6)return 'Uptrend Under Pressure';if(sc>0&&sc<2)return 'Uptrend';if(sc>=2&&di>=6)return 'Strong but Late';if(sc>=2)return 'Strong Uptrend';return 'Uptrend';}
+function dropT(r){const o=['Strong Uptrend','Strong but Late','Uptrend','Uptrend Under Pressure','Choppy / Pressured','Correction'];const i=o.indexOf(r);return(i>=0&&i<o.length-1)?o[i+1]:r;}
+let CR='Uptrend',CRD=null;
+async function ldReg(){try{const a=await dAll('reg');if(!a.length){CR='Uptrend';CRD=null;return;}a.sort((x,y)=>y.date.localeCompare(x.date));const l=a[0];CR=cReg(l.score,l.dist,l.gap||0,l.ftd);CRD=l;}catch(e){console.error('ldReg',e);}}
+async function savReg(e){e.preventDefault();var manual=$('rManual').checked;var sc=manual?+$('rSc').value:getCalcScore();var di=+$('rDi').value,ga=+($('rGa').value||0),ft=$('rFt').value==='1';var reg=cReg(sc,di,ga,ft);var entry={date:$('rDt').value||td(),score:sc,dist:di,gap:ga,ftd:ft,regime:reg};if(!manual){entry.spyAcc=+$('rSA').value;entry.spyDist=+$('rSD').value;entry.qqAcc=+$('rQA').value;entry.qqDist=+$('rQD').value;entry.spy50=+$('rS5').value;entry.qq50=+$('rQ5').value;}await dPut('reg',entry);tst('Regime: '+reg);$('rForm').reset();$('rDt').value=td();calcScore();await ren();return false;}
+
+/* ===== HELPERS ===== */
+function $(id){return document.getElementById(id)}
+function td(){return new Date().toISOString().split('T')[0]}
+function dBet(a,b){return Math.floor((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/(864e5))}
+function tDays(a,b){return Math.max(0,Math.round(dBet(a,b)*5/7))}
+function f$(v){return '$'+(+v||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function fP(v){return(v>=0?'+':'')+(v*100).toFixed(2)+'%'}
+function fR(v){return(v>=0?'+':'')+v.toFixed(1)+'R'}
+function tst(m){const t=$('tst');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
+function shCf(m,cb){$('cfm').textContent=m;$('cfo').classList.add('show');$('cfb').onclick=()=>{hideCf();cb();};}
+function hideCf(){$('cfo').classList.remove('show')}
+function shMo(ti,h){$('moTi').textContent=ti;$('moCo').innerHTML=h;$('mol').classList.add('show')}
+function hideMo(){$('mol').classList.remove('show')}
+function wkSt(ds){const d=new Date(ds+'T12:00:00');const dy=d.getDay();const df=d.getDate()-dy+(dy===0?-6:1);return new Date(d.getFullYear(),d.getMonth(),df).toISOString().split('T')[0]}
+
+/* ===== NAVIGATION ===== */
+function go(id,el){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  if(el)el.classList.add('on');else document.querySelectorAll('.ni').forEach(n=>{if(n.dataset.s===id)n.classList.add('on');});
+  $('mainC').scrollTop=0;
+  try{
+    if(id==='sDash')renDash();if(id==='sPos')renPos('open');if(id==='sReg'){renReg();$('rDt').value=td();calcScore();}
+    if(id==='sChk')renChk();if(id==='sPerf')renPerf();if(id==='sJrn')renJrn();
+    if(id==='sSet')popSet();if(id==='sStrat')console.log('Strategy shown');
+    if(id==='sAdd'){if(!isEditing){$('aForm').reset();$('eWarn').innerHTML='';$('fDt').value=td();$('aForm').onsubmit=e=>savPos(e);}isEditing=false;}
+  }catch(e){console.error('go',e);}
+}
+
+/* ===== VIOLATION ENGINE ===== */
+async function runV(pos){
+  const V=[];const op=pos.filter(p=>p.status==='open');const cl=pos.filter(p=>p.status==='closed');
+  const rc=RC[CR]||RC['Uptrend'];const today=td();const rpt=S.acc*(S.rsk/100);
+  if(op.length>rc.mp)V.push({s:'r',tk:'PORTFOLIO',ru:'Position Count',dt:op.length+' open > '+rc.mp+' max for '+CR,ac:'Close '+(op.length-rc.mp)+' position(s)'});
+  let tH=0;op.forEach(p=>{const r=(p.ep-(p.cs||p.sp))*p.sh;if(r>0)tH+=r;});
+  const hP=S.acc>0?(tH/S.acc)*100:0;const rH=rc.hc||S.heat;
+  if(hP>rH)V.push({s:'r',tk:'PORTFOLIO',ru:'Heat Cap Breach',dt:'Heat '+hP.toFixed(1)+'% > '+rH+'%',ac:'Reduce exposure or tighten stops'});
+  const sec={};op.forEach(p=>{if(p.sector)sec[p.sector]=(sec[p.sector]||0)+1;});
+  for(const[k,v]of Object.entries(sec)){const pc=(v/op.length)*100;if(op.length>=3&&pc>S.maxS)V.push({s:'r',tk:'PORTFOLIO',ru:'Sector: '+k,dt:v+'/'+op.length+' ('+pc.toFixed(0)+'%) > '+S.maxS+'%',ac:'Limit new '+k+' entries'});}
+  const tE=pos.filter(p=>p.ed===today);if(tE.length>=S.maxE)V.push({s:'r',tk:'PORTFOLIO',ru:'Max Daily Entries',dt:tE.length+' today',ac:'No more entries today'});
+  const rcl=cl.filter(p=>p.exr).sort((a,b)=>(b.exd||'').localeCompare(a.exd||''));
+  let cL=0;for(const p of rcl){if((p.exp-p.ep)*p.sh<0)cL++;else break;}
+  if(cL>=5)V.push({s:'r',tk:'GUARDRAIL',ru:'5 Consecutive Stops',dt:cL+' losses in a row',ac:'PAUSE 5 trading days'});
+  else if(cL>=3)V.push({s:'y',tk:'GUARDRAIL',ru:'3 Consecutive Stops',dt:cL+' losses in a row',ac:'PAUSE 2 trading days'});
+  const ws=wkSt(today);let wP=0;cl.filter(p=>p.exd&&p.exd>=ws).forEach(p=>{wP+=(p.exp-p.ep)*p.sh;});
+  if(wP<0&&Math.abs(wP)/S.acc>=.02)V.push({s:'r',tk:'GUARDRAIL',ru:'Weekly P&L -2%',dt:'Week: '+f$(wP),ac:'STOP trading until Monday'});
+  for(const p of op){
+    const cp=p.cp||p.ep;const pP=(cp-p.ep)/p.ep;const rps=p.ep-p.sp;const rM=rps?((cp-p.ep)/rps):0;
+    const ds=tDays(p.ed,today);const pV=(cp*p.sh/S.acc)*100;
+    if(!rc.st.includes(p.st)&&CR!=='FTD Triggered')V.push({s:'r',tk:p.tk,ru:'Regime Violation',dt:p.st+' forbidden in '+CR,ac:'Monitor closely'});
+    if(ds>=13&&rM<1)V.push({s:'r',tk:p.tk,ru:'Time Stop — EXIT',dt:'Day '+ds+', only '+fR(rM),ac:'MANDATORY EXIT'});
+    else if(ds>=8&&rM<1)V.push({s:'y',tk:p.tk,ru:'Time Stop Warning',dt:'Day '+ds+', '+fR(rM),ac:'Review or exit'});
+    if(p.earn){const de=dBet(today,p.earn);if(de>=0&&de<=5){let a='';if(pP>=.15)a='Hold full';else if(pP>=.05)a='TRIM TO 1/2';else if(pP>0)a='TRIM TO 1/4';else a='EXIT — no cushion';V.push({s:pP>=.15?'y':'r',tk:p.tk,ru:'Earnings in '+de+'d',dt:'P&L: '+fP(pP),ac:a});}}
+    if(pV>S.maxP)V.push({s:'r',tk:p.tk,ru:'Position Size',dt:pV.toFixed(1)+'% (max '+S.maxP+'%)',ac:'Reduce size'});
+    if((p.tr==='T2'||p.tr==='T3')&&(rc.py==='T1 only'||rc.py==='None'))V.push({s:'r',tk:p.tk,ru:'Pyramid Violation',dt:p.tr+' not allowed in '+CR,ac:'Review entry'});
+    if(p.tr==='T3'&&rc.py==='T1+T2')V.push({s:'r',tk:p.tk,ru:'T3 Not Allowed',dt:'Only in Strong Uptrend',ac:'Consider trimming'});
+    if(p.sma){const sd=tDays(p.sma,today);if(sd>=35)V.push({s:'y',tk:p.tk,ru:'7-Week Rule ACTIVE',dt:sd+' days on 10 SMA',ac:'Sell on first violation'});else if(sd>=28)V.push({s:'y',tk:p.tk,ru:'7-Week Approaching',dt:sd+'/35 days',ac:'Watch closely'});}
+    if(rM>=5)V.push({s:'y',tk:p.tk,ru:'+5R Reached',dt:fR(rM),ac:'Sell T2 if held'});
+    else if(rM>=3)V.push({s:'y',tk:p.tk,ru:'+3R Reached',dt:fR(rM),ac:'Sell T3 if held'});
+    if(pP>=0.20&&ds<=15)V.push({s:'y',tk:p.tk,ru:'20% in 3 Weeks!',dt:fP(pP)+' in '+ds+' days',ac:'HOLD 8 weeks — only hard stop or Grateful Dead exits T1'});
+    if(p.atr)V.push({s:'y',tk:p.tk,ru:'3 ATR Extension',dt:'Flagged extended',ac:'Trim add-ons, raise T1 stop'});
+  }
+  return V;
+}
+
+/* ===== DASHBOARD ===== */
+async function renDash(){
+  try{
+    const pos=await dAll('pos');const op=pos.filter(p=>p.status==='open');const cl=pos.filter(p=>p.status==='closed');
+    const rc=RC[CR]||RC['Uptrend'];const rpt=S.acc*(S.rsk/100)*rc.sm;
+    let tH=0,oP=0,cP=0,tDD=0;
+    op.forEach(p=>{const c=p.cp||p.ep;oP+=(c-p.ep)*p.sh;const r=(p.ep-(p.cs||p.sp))*p.sh;if(r>0)tH+=r;var dd=(c-(p.cs||p.sp))*p.sh;if(dd>0)tDD+=dd;});
+    cl.forEach(p=>{if(p.exp)cP+=(p.exp-p.ep)*p.sh;});
+    const base=S.baseline||S.acc;const eq=base+cP+oP;const hP=S.acc>0?(tH/S.acc)*100:0;const yr=(eq-base)/base;
+    const rH=rc.hc||S.heat;
+    const h=$('hReg');h.textContent=CR||'No Regime';
+    h.className='badge '+(['Correction','Choppy / Pressured'].includes(CR)?'r':['Uptrend Under Pressure','Strong but Late'].includes(CR)?'y':CR==='FTD Triggered'?'p':'g');
+    $('dSt').innerHTML=`
+      <div class="st"><div class="sl">Account</div><div class="sv">${f$(S.acc)}</div><div class="ss">risk basis</div></div>
+      <div class="st"><div class="sl">Equity</div><div class="sv" style="color:${eq>=base?'var(--grn)':'var(--red)'}">${f$(eq)}</div></div>
+      <div class="st"><div class="sl">YTD Return</div><div class="sv" style="color:${yr>=0?'var(--grn)':'var(--red)'}">${fP(yr)}</div></div>
+      <div class="st"><div class="sl">Open P&L</div><div class="sv" style="color:${oP>=0?'var(--grn)':'var(--red)'}">${f$(oP)}</div></div>
+      <div class="st"><div class="sl">Drawdown</div><div class="sv" style="color:var(--yel)">${f$(tDD)}</div><div class="ss">current to stops</div></div>
+      <div class="st"><div class="sl">Positions</div><div class="sv" style="color:var(--acc)">${op.length} / ${rc.mp}</div></div>
+      <div class="st"><div class="sl">Risk/Trade</div><div class="sv">${f$(rpt)}</div><div class="ss">${S.rsk}% × ${rc.sm*100}%</div></div>
+      <div class="st" style="grid-column:1/-1"><div class="sl">Portfolio Heat</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+          <div class="sv" style="color:${hP>rH?'var(--red)':hP>rH*.8?'var(--yel)':'var(--grn)'}">${hP.toFixed(1)}%</div>
+          <div style="flex:1;max-width:200px"><div class="hb"><div class="hf" style="width:${Math.min(hP/rH*100,100)}%;background:${hP>rH?'var(--red)':hP>rH*.8?'var(--yel)':'var(--grn)'}"></div></div>
+          <div class="hl"><span>0%</span><span>${rH}% cap</span></div></div>
+        </div></div>`;
+    const V=await runV(pos);V.sort((a,b)=>(a.s==='r'?0:1)-(b.s==='r'?0:1));
+    $('vCt').textContent=V.length?V.length+' active':'';
+    $('vList').innerHTML=V.length?V.map(v=>`<div class="vi${v.s==='y'?' w':''}"><div>${v.s==='r'?'🔴':'🟡'}</div><div style="flex:1;line-height:1.5"><span class="vt">${v.tk}</span> ${v.ru}<br><span style="font-size:11px;color:var(--t3)">${v.dt}</span><br><span style="font-size:11px;color:${v.s==='r'?'var(--red)':'var(--yel)'}">→ ${v.ac}</span></div></div>`).join(''):'<div style="padding:10px;color:var(--grn);font-size:13px">✅ No violations</div>';
+    const rV=V.filter(v=>v.s==='r').length;const nb=$('nBdg');if(rV){nb.style.display='flex';nb.textContent=rV;}else nb.style.display='none';
+    $('dPos').innerHTML=op.length?op.map(p=>pCard(p,V)).join(''):'<div class="es"><div class="ei">📊</div><p>No open positions</p></div>';
+    if(cl.length>=1){var wins=cl.filter(p=>p.exp&&(p.exp-p.ep)>0);var losses=cl.filter(p=>p.exp&&(p.exp-p.ep)<=0);var wr=cl.length?(wins.length/cl.length):0;var avgW=wins.length?(wins.reduce(function(s,p){var r=p.ep-p.sp;return s+(r?(p.exp-p.ep)/r:0);},0)/wins.length):0;var avgL=losses.length?(losses.reduce(function(s,p){var r=p.ep-p.sp;return s+(r?(p.exp-p.ep)/r:0);},0)/losses.length):0;var exp=wr*avgW+(1-wr)*avgL;var pf=losses.length?Math.abs(wins.reduce(function(s,p){return s+(p.exp-p.ep)*p.sh;},0)/(losses.reduce(function(s,p){return s+(p.exp-p.ep)*p.sh;},0)||1)):wins.length?999:0;$('dStats').innerHTML='<div class="sh" style="margin-bottom:8px">Performance ('+cl.length+' closed)</div><div class="sg"><div class="st"><div class="sl">Win Rate</div><div class="sv" style="color:'+(wr>=0.4?'var(--grn)':'var(--red)')+'">'+fP(wr)+'</div><div class="ss">'+wins.length+'W / '+losses.length+'L</div></div><div class="st"><div class="sl">Avg Winner</div><div class="sv" style="color:var(--grn)">'+fR(avgW)+'</div></div><div class="st"><div class="sl">Avg Loser</div><div class="sv" style="color:var(--red)">'+fR(avgL)+'</div></div><div class="st"><div class="sl">Expectancy</div><div class="sv" style="color:'+(exp>0?'var(--grn)':'var(--red)')+'">'+fR(exp)+'</div><div class="ss">per trade</div></div><div class="st"><div class="sl">Profit Factor</div><div class="sv" style="color:'+(pf>1?'var(--grn)':'var(--red)')+'">'+pf.toFixed(2)+'</div></div></div>';}else{$('dStats').innerHTML='';}
+  }catch(e){console.error('renDash',e);$('dSt').innerHTML='<div class="st" style="grid-column:1/-1;text-align:center"><div style="color:var(--red);font-weight:600">Error: '+e.message+'</div></div>';}
+}
+
+function pCard(p,V){
+  const c=p.cp||p.ep;const pnl=(c-p.ep)*p.sh;const pP=(c-p.ep)/p.ep;const rps=p.ep-p.sp;const rM=rps?((c-p.ep)/rps):0;const ds=tDays(p.ed,td());
+  const fl=V?V.filter(v=>v.tk===p.tk).map(v=>v.s==='r'?'🔴':'🟡').join(''):'';
+  return `<div class="pc" onclick="shDet('${p.id}')"><div class="pt"><div><span class="pk">${p.tk}</span><span class="tb">${p.tr||'T1'}</span></div><span class="ps ${p.st.toLowerCase()}">${p.st}</span></div><div class="pm"><span>Entry: ${f$(p.ep)}</span><span>Stop: ${f$(p.cs||p.sp)}</span><span>Day ${ds}</span><span>DD: ${f$((c-(p.cs||p.sp))*p.sh)}</span></div><div class="pb"><div><span style="font-size:15px;font-weight:700;color:${pnl>=0?'var(--grn)':'var(--red)'}">${f$(pnl)} <span style="font-size:12px">(${fP(pP)})</span></span><span style="font-size:12px;color:var(--t2);margin-left:6px">${fR(rM)}</span></div><div>${fl}</div></div></div>`;
+}
+
+/* ===== POSITIONS ===== */
+async function renPos(f){
+  try{const pos=await dAll('pos');const V=await runV(pos);let fi=pos;
+    if(f==='open')fi=pos.filter(p=>p.status==='open');else if(f==='closed')fi=pos.filter(p=>p.status==='closed');
+    fi.sort((a,b)=>(b.ed||'').localeCompare(a.ed||''));
+    $('pList').innerHTML=fi.length?fi.map(p=>{
+      if(p.status==='closed'){const pnl=((p.exp||p.ep)-p.ep)*p.sh;const pP=((p.exp||p.ep)-p.ep)/p.ep;return `<div class="pc" onclick="shDet('${p.id}')" style="opacity:.6"><div class="pt"><span class="pk">${p.tk} <span class="tb">${p.tr||'T1'}</span></span><span class="ps ${p.st.toLowerCase()}">${p.st}</span></div><div class="pm"><span>${p.ed} → ${p.exd||'?'}</span><span>${p.exr||''}</span></div><div class="pb"><span style="font-size:14px;font-weight:700;color:${pnl>=0?'var(--grn)':'var(--red)'}">${f$(pnl)} (${fP(pP)})</span></div></div>`;}
+      return pCard(p,V);}).join(''):'<div class="es"><div class="ei">📋</div><p>No '+f+' positions</p></div>';
+  }catch(e){console.error('renPos',e);}
+}
+function fPos(f,btn){btn.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));btn.classList.add('on');renPos(f);}
+
+/* ===== DETAIL ===== */
+let curD=null;
+let isEditing=false;
+async function shDet(id){
+  try{curD=id;const p=await dGet('pos',id);if(!p)return;go('sDet');
+    $('dTi').innerHTML=p.tk+' <span class="tb">'+(p.tr||'T1')+'</span> <span class="ps '+p.st.toLowerCase()+'">'+p.st+'</span>';
+    const c=p.cp||p.ep;const pnl=(c-p.ep)*p.sh;const pP=(c-p.ep)/p.ep;const rps=p.ep-p.sp;const rM=rps?((c-p.ep)/rps):0;const ds=tDays(p.ed,td());const initRisk=(p.ep-p.sp)*p.sh;const curHeat=(p.ep-(p.cs||p.sp))*p.sh;const heatR=rps?((p.ep-(p.cs||p.sp))/rps):0;const dd=(c-(p.cs||p.sp))*p.sh;const ddP=c>0?((c-(p.cs||p.sp))/c):0;
+    $('dCon').innerHTML=`<div class="sg"><div class="st"><div class="sl">P&L</div><div class="sv" style="color:${pnl>=0?'var(--grn)':'var(--red)'}">${f$(pnl)}</div><div class="ss">${fP(pP)}</div></div><div class="st"><div class="sl">R-Multiple</div><div class="sv" style="color:${rM>=0?'var(--grn)':'var(--red)'}">${fR(rM)}</div></div><div class="st"><div class="sl">Days Held</div><div class="sv" style="color:var(--acc)">${ds}</div></div><div class="st"><div class="sl">Init Risk</div><div class="sv">${f$(initRisk)}</div><div class="ss">1R at entry</div></div><div class="st"><div class="sl">Open Heat</div><div class="sv" style="color:${curHeat>0?'var(--red)':'var(--grn)'}">${f$(Math.max(curHeat,0))}</div><div class="ss">${fR(heatR)}R</div></div><div class="st"><div class="sl">Drawdown</div><div class="sv" style="color:var(--yel)">${f$(Math.max(dd,0))}</div><div class="ss">${fP(ddP)} from current</div></div></div>
+    <div class="card" style="padding:0">${[['Entry',f$(p.ep)],['Current',f$(c)],['Init Stop',f$(p.sp)],['Curr Stop',f$(p.cs||p.sp)],['Shares',p.sh],['Pos Value',f$(c*p.sh)],['Sector',p.sector||'—'],['Zone',p.zone||'—'],['Entry Date',p.ed],['10 SMA Start',p.sma||'—'],['Earnings',p.earn||'—'],['Regime @Entry',p.reg||'—']].map(r=>'<div class="dr"><span class="dl">'+r[0]+'</span><span class="dv">'+r[1]+'</span></div>').join('')}${p.notes?'<div class="dr"><span class="dl">Notes</span><span class="dv">'+p.notes+'</span></div>':''}${p.status==='closed'?'<div class="dr" style="border-top:2px solid var(--brd)"><span class="dl">Exit Date</span><span class="dv">'+(p.exd||'—')+'</span></div><div class="dr"><span class="dl">Exit Price</span><span class="dv">'+f$(p.exp)+'</span></div><div class="dr"><span class="dl">Exit Reason</span><span class="dv">'+(p.exr||'—')+'</span></div>':''}</div>`;
+    if(p.status==='open'){const all=await dAll('pos');const V=await runV(all);const pv=V.filter(v=>v.tk===p.tk);
+      $('dVi2').innerHTML=pv.length?'<div class="sh" style="margin-bottom:8px">VIOLATIONS</div>'+pv.map(v=>'<div class="vi'+(v.s==='y'?' w':'')+'"><div>'+(v.s==='r'?'🔴':'🟡')+'</div><div style="flex:1;line-height:1.5">'+v.ru+'<br><span style="font-size:11px;color:var(--t3)">'+v.dt+'</span><br><span style="font-size:11px;color:'+(v.s==='r'?'var(--red)':'var(--yel)')+'">→ '+v.ac+'</span></div></div>').join(''):'<div style="color:var(--grn);font-size:13px;padding:8px 0">✅ No violations on this position</div>';
+    }else $('dVi2').innerHTML='';
+  }catch(e){console.error('shDet',e);}
+}
+
+/* ===== ADD/EDIT/CLOSE ===== */
+function calcSh(){
+  const ep=+$('fEp').value,sp=+$('fSp').value;if(!ep||!sp||sp>=ep){$('shH').textContent='';return;}
+  const rc=RC[CR]||RC['Uptrend'];const rpt=S.acc*(S.rsk/100)*rc.sm;const rps=ep-sp;const sh=Math.floor(rpt/rps);
+  const tr=$('fTr').value;let adj=sh;if(tr==='T2')adj=Math.floor(sh*.5);if(tr==='T3')adj=Math.floor(sh*.25);
+  $('fSh').value=adj;$('shH').textContent='Risk: '+f$(rpt)+' | '+f$(rps)+'/sh | '+adj+' shares';valEntry();
+}
+function valEntry(){
+  const st=$('fSt').value;const rc=RC[CR]||RC['Uptrend'];const w=[];
+  if(st&&!rc.st.includes(st))w.push('🔴 '+st+' NOT allowed in '+CR);
+  const tr=$('fTr').value;
+  if(tr==='T2'&&(rc.py==='T1 only'||rc.py==='None'))w.push('🔴 Pyramiding not allowed in '+CR);
+  if(tr==='T3'&&rc.py!=='T1+T2+T3')w.push('🔴 T3 only allowed in Strong Uptrend');
+  $('eWarn').innerHTML=w.map(x=>'<div style="padding:8px 12px;background:rgba(239,68,68,.1);border-left:3px solid var(--red);border-radius:6px;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--red)">'+x+'</div>').join('');
+}
+async function savPos(e){e.preventDefault();
+  const p={tk:$('fTk').value.toUpperCase().trim(),st:$('fSt').value,tr:$('fTr').value,par:$('fPa').value.toUpperCase().trim()||null,ed:$('fDt').value||td(),ep:+$('fEp').value,sp:+$('fSp').value,sh:+$('fSh').value,cp:+$('fEp').value,cs:+$('fSp').value,status:'open',reg:CR,sector:$('fSe').value||null,zone:$('fZo').value||null,sma:$('fSm').value||null,earn:$('fEd').value||null,notes:$('fNo').value||null,atr:false,exd:null,exp:null,exr:null};
+  await dPut('pos',p);tst(p.tk+' '+p.tr+' added');go('sDash');return false;}
+async function updPrice(){const p=await dGet('pos',curD);if(!p)return;
+  shMo('Update '+p.tk,`<div class="fg"><label class="fl">Current Price</label><input class="fi" id="uPr" type="number" step="0.01" value="${p.cp||p.ep}"></div><div class="fg"><label class="fl">Current Stop</label><input class="fi" id="uSt" type="number" step="0.01" value="${p.cs||p.sp}"></div><div class="fg"><label class="fl">3 ATR Extended?</label><select class="fs" id="uAt"><option value="0" ${!p.atr?'selected':''}>No</option><option value="1" ${p.atr?'selected':''}>Yes — flag active</option></select></div><button class="btn bp" style="margin-top:4px" onclick="savUpd()">Save</button>`);}
+async function savUpd(){const p=await dGet('pos',curD);p.cp=+$('uPr').value;p.cs=+$('uSt').value;p.atr=$('uAt').value==='1';await dPut('pos',p);hideMo();tst('Updated');shDet(curD);}
+function closePos(){shMo('Close Position',`<div class="fg"><label class="fl">Exit Price</label><input class="fi" id="xPr" type="number" step="0.01"></div><div class="fg"><label class="fl">Exit Reason</label><select class="fs" id="xRe"><option>Hard Stop</option><option>Grateful Dead</option><option>3 ATR Extension</option><option>Quicksand</option><option>Quick</option><option>R-Target</option><option>7-Week Rule</option><option>Time Stop</option><option>Earnings</option><option>Manual</option></select></div><button class="btn bd" style="margin-top:4px" onclick="cfClose()">Close Position</button>`);}
+async function cfClose(){const p=await dGet('pos',curD);p.status='closed';p.exd=td();p.exp=+$('xPr').value;p.exr=$('xRe').value;await dPut('pos',p);await dPut('jrn',{date:td(),tk:p.tk,act:'Exit',st:p.st,reg:CR,notes:p.exr+' at '+f$(p.exp)+'. P&L: '+f$((p.exp-p.ep)*p.sh),comp:null});hideMo();tst(p.tk+' closed — '+p.exr);go('sPos');}
+function delPos(){shCf('DELETE this position permanently?',async function(){await dDel('pos',curD);hideCf();tst('Deleted');go('sPos');});}
+function clrJrn(){shCf('DELETE all journal entries?',async function(){await dClr('jrn');hideCf();tst('Journal cleared');renJrn();});}
+async function editPos(){const p=await dGet('pos',curD);if(!p)return;
+  isEditing=true;
+  $('fTk').value=p.tk;$('fSt').value=p.st;$('fEp').value=p.ep;$('fSp').value=p.sp;$('fSh').value=p.sh;$('fTr').value=p.tr||'T1';$('fPa').value=p.par||'';$('fSe').value=p.sector||'';$('fZo').value=p.zone||'';$('fSm').value=p.sma||'';$('fEd').value=p.earn||'';$('fNo').value=p.notes||'';$('fDt').value=p.ed||td();
+  $('aForm').onsubmit=async e=>{e.preventDefault();p.tk=$('fTk').value.toUpperCase().trim();p.st=$('fSt').value;p.ep=+$('fEp').value;p.sp=+$('fSp').value;p.sh=+$('fSh').value;p.tr=$('fTr').value;p.par=$('fPa').value.toUpperCase().trim()||null;p.sector=$('fSe').value||null;p.zone=$('fZo').value||null;p.sma=$('fSm').value||null;p.earn=$('fEd').value||null;p.notes=$('fNo').value||null;p.ed=$('fDt').value||p.ed;await dPut('pos',p);tst(p.tk+' updated');$('aForm').onsubmit=e2=>savPos(e2);shDet(p.id);return false;};go('sAdd');}
+
+/* ===== REGIME ===== */
+async function renReg(){try{await ldReg();const rc=RC[CR]||RC['Uptrend'];
+  $('rCard').innerHTML=`<div style="text-align:center;margin-bottom:14px"><div style="font-size:22px;font-weight:800;${rc.cl}">${CR}</div>${CRD?'<div style="font-size:12px;color:var(--t3);margin-top:4px">Score: '+CRD.score+' | Dist: '+CRD.dist+' | Gap: '+(CRD.gap||0)+'</div>':''}</div><div class="sg"><div class="st"><div class="sl">Max Pos</div><div class="sv">${rc.mp}</div></div><div class="st"><div class="sl">Size Mod</div><div class="sv">${rc.sm*100}%</div></div><div class="st"><div class="sl">Pyramid</div><div class="sv" style="font-size:13px">${rc.py}</div></div><div class="st"><div class="sl">Heat Cap</div><div class="sv">${rc.hc}%</div></div></div><div style="font-size:12px;color:var(--t2)"><b>Setups Allowed:</b> ${rc.st.length?rc.st.join(', '):'None — pilots on FTD only'}</div>`;
+  const all=await dAll('reg');all.sort((a,b)=>b.date.localeCompare(a.date));
+  $('rHist').innerHTML=all.slice(0,20).map(r=>{const c=RC[r.regime]||{};return'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd);font-size:13px"><span>'+r.date+'</span><span style="font-weight:600;'+(c.cl||'')+'">'+r.regime+'</span><span style="color:var(--t3)">'+r.score+'</span></div>';}).join('')||'<div style="color:var(--t3);font-size:13px">No history yet</div>';
+}catch(e){console.error('renReg',e);}}
+
+/* ===== CHECKLIST ===== */
+async function renChk(){try{const pos=await dAll('pos');const op=pos.filter(p=>p.status==='open');
+  if(!op.length){$('chSel').innerHTML='';$('chSt').innerHTML='<div class="es"><div class="ei">✅</div><p>No open positions to review</p></div>';return;}
+  $('chSel').innerHTML='<select class="fs" id="chTk" onchange="renChkFor()"><option value="all">All Positions</option>'+op.map(p=>'<option value="'+p.id+'">'+p.tk+' ('+( p.tr||'T1')+')</option>').join('')+'</select>';renChkFor();
+}catch(e){console.error('renChk',e);}}
+async function renChkFor(){const sel=$('chTk').value;const pos=await dAll('pos');let op=pos.filter(p=>p.status==='open');if(sel!=='all')op=op.filter(p=>String(p.id)===String(sel));
+  const info=op.map(p=>{const c=p.cp||p.ep;const rps=p.ep-p.sp;const rM=rps?((c-p.ep)/rps):0;const ds=tDays(p.ed,td());return'<div style="padding:8px 12px;background:var(--bg1);border-radius:8px;margin-bottom:6px;font-size:12px"><b>'+p.tk+'</b> '+(p.tr||'T1')+' | '+fR(rM)+' | Day '+ds+' | '+fP((c-p.ep)/p.ep)+'</div>';}).join('');
+  const steps=[{n:1,t:'Hard Stop',d:'Any position hit stop today?',a:'YES → sell immediately, no debate'},{n:2,t:'Grateful Dead',d:'RS crossed below 50-day RS SMA?',a:'YES → EXIT ALL — overrides everything'},{n:3,t:'3 ATR Extension',d:'Low ≥3×ATR above 21 EMA?',a:'Trim add-ons, raise T1 stop to ext day low'},{n:4,t:'Quicksand',d:'RS below 21 RS SMA for 3+ days?',a:'Sell T3+T2, hold T1 or half'},{n:5,t:'Quick',d:'RS crossed below 21 RS SMA?',a:'Sell T3 if pyramided; warning if T1 only'},{n:6,t:'R-Targets',d:'+3R → sell T3 | +5R → sell T2',a:'Skip if Steps 3/4 already triggered'},{n:7,t:'7-Week Rule',d:'10 SMA violation confirmed?',a:'Sell T1. Pre-35 days: switch to 50 DMA trail'},{n:8,t:'Time Stop',d:'Day 8+ without +1R?',a:'Day 13+: mandatory exit. Capital is dead.'}];
+  $('chSt').innerHTML=info+steps.map(s=>'<div class="ci" onclick="this.classList.toggle(&apos;ck&apos;)"><div class="cb"></div><div><div style="font-size:13px"><b>'+s.n+'.</b> '+s.t+'</div><div style="font-size:11px;color:var(--t3);margin-top:2px">'+s.d+'</div><div style="font-size:11px;color:var(--yel);margin-top:2px">'+s.a+'</div></div></div>').join('');}
+
+/* ===== JOURNAL ===== */
+async function renJrn(){try{const e=await dAll('jrn');e.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  $('jList').innerHTML=e.length?e.map(j=>'<div class="card" style="padding:12px"><div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-weight:600;font-size:13px">'+(j.tk||'—')+' <span style="color:var(--t3);font-weight:400">'+(j.act||'')+'</span></span><span style="font-size:11px;color:var(--t3)">'+j.date+'</span></div><div style="font-size:12px;color:var(--t2);line-height:1.5">'+(j.notes||'')+'</div>'+(j.comp?'<div style="font-size:11px;color:var(--yel);margin-top:4px">Compliance: '+j.comp+'/5</div>':'')+'</div>').join(''):'<div class="es"><div class="ei">📝</div><p>No entries yet.<br>Auto-created on position close.</p></div>';
+}catch(e){console.error('renJrn',e);}}
+function jrnForm(){shMo('New Journal Entry','<div class="fr"><div class="fg"><label class="fl">Ticker</label><input class="fi" id="jTk" placeholder="Optional"></div><div class="fg"><label class="fl">Action</label><select class="fs" id="jAc"><option>Entry</option><option>Exit</option><option>Trim</option><option>Add-On</option><option>Observation</option><option>Sunday Audit</option></select></div></div><div class="fg"><label class="fl">Notes</label><textarea class="fta" id="jNo" rows="3" placeholder="What happened..."></textarea></div><div class="fg"><label class="fl">Rule Compliance (1-5)</label><select class="fs" id="jCo"><option value="">Skip</option><option value="5">5 — Perfect</option><option value="4">4 — Minor deviation</option><option value="3">3 — Notable</option><option value="2">2 — Significant</option><option value="1">1 — Major violation</option></select></div><button class="btn bp" onclick="savJrn()">Save</button>');}
+async function savJrn(){await dPut('jrn',{date:td(),tk:($('jTk').value||'').toUpperCase().trim()||null,act:$('jAc').value,st:null,reg:CR,notes:$('jNo').value,comp:$('jCo').value||null});hideMo();tst('Saved');renJrn();}
+
+/* ===== PERFORMANCE ===== */
+async function renPerf(){try{const pos=await dAll('pos');const cl=pos.filter(p=>p.status==='closed'&&p.exp);const op=pos.filter(p=>p.status==='open');
+  let cP=0,w=0,l=0,tR=0;const bs={};
+  cl.forEach(p=>{const pnl=(p.exp-p.ep)*p.sh;const rps=p.ep-p.sp;const r=rps?((p.exp-p.ep)/rps):0;cP+=pnl;tR+=r;if(pnl>=0)w++;else l++;if(!bs[p.st])bs[p.st]={w:0,l:0,r:0,n:0};bs[p.st].n++;bs[p.st].r+=r;if(pnl>=0)bs[p.st].w++;else bs[p.st].l++;});
+  const tt=w+l;const wr=tt?(w/tt*100):0;const ar=tt?(tR/tt):0;const ex=tt?(cP/tt):0;
+  let oP=0;op.forEach(p=>{oP+=((p.cp||p.ep)-p.ep)*p.sh;});
+  const base=S.baseline||S.acc;const eq=base+cP+oP;const yr=((eq-base)/base)*100;
+  $('pSt').innerHTML=`<div class="st"><div class="sl">Total Trades</div><div class="sv" style="color:var(--acc)">${tt}</div></div><div class="st"><div class="sl">Win Rate</div><div class="sv" style="color:${wr>=40?'var(--grn)':'var(--red)'}">${wr.toFixed(1)}%</div></div><div class="st"><div class="sl">Avg R</div><div class="sv" style="color:${ar>=0?'var(--grn)':'var(--red)'}">${ar.toFixed(2)}R</div></div><div class="st"><div class="sl">Expectancy</div><div class="sv" style="color:${ex>=0?'var(--grn)':'var(--red)'}">${f$(ex)}</div></div><div class="st"><div class="sl">Realized P&L</div><div class="sv" style="color:${cP>=0?'var(--grn)':'var(--red)'}">${f$(cP)}</div></div><div class="st"><div class="sl">YTD Return</div><div class="sv" style="color:${yr>=0?'var(--grn)':'var(--red)'}">${yr.toFixed(1)}%</div></div>`;
+  $('pSet').innerHTML=Object.entries(bs).map(([k,d])=>'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--brd);font-size:13px"><span class="ps '+k.toLowerCase()+'" style="width:50px;text-align:center">'+k+'</span><span>'+d.n+' trades</span><span>'+(d.w/d.n*100).toFixed(0)+'% WR</span><span>'+(d.r/d.n).toFixed(2)+'R</span></div>').join('')||'<div style="color:var(--t3);font-size:13px">No closed trades yet</div>';
+  const tr=cP+oP;const tg=[['Q1 (+15-25%)',base*.25],['Q2 (+35-50%)',base*.5],['Q3 (+60-75%)',base*.75],['Q4 (+100%)',base*1]];
+  $('pQ').innerHTML=tg.map(([lb,tgt])=>{const pc=Math.min(Math.max(tr/tgt*100,0),100);const co=pc>=100?'var(--grn)':pc>=50?'var(--acc)':'var(--t3)';return'<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>'+lb+'</span><span style="color:'+co+'">'+f$(tr)+' / '+f$(tgt)+'</span></div><div class="hb"><div class="hf" style="width:'+pc+'%;background:'+co+'"></div></div></div>';}).join('');
+  $('pRec').innerHTML=cl.sort((a,b)=>(b.exd||'').localeCompare(a.exd||'')).slice(0,10).map(p=>{const pnl=(p.exp-p.ep)*p.sh;return'<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--brd);font-size:12px"><span style="font-weight:600">'+p.tk+'</span><span>'+p.exd+'</span><span>'+( p.exr||'')+'</span><span style="color:'+(pnl>=0?'var(--grn)':'var(--red)')+'">'+f$(pnl)+'</span></div>';}).join('')||'<div style="color:var(--t3);font-size:13px">No closed trades yet</div>';
+}catch(e){console.error('renPerf',e);}}
+
+/* ===== EXPORT/IMPORT/RESET ===== */
+async function expData(){const d={pos:await dAll('pos'),reg:await dAll('reg'),jrn:await dAll('jrn'),settings:S,date:new Date().toISOString()};const b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='TradePath_'+td()+'.json';a.click();URL.revokeObjectURL(u);localStorage.setItem('tp_last_backup',Date.now().toString());tst('Exported');}
+async function expCSV(){var pos=await dAll("pos");if(!pos.length){tst("No trades");return;}var nl=String.fromCharCode(10);var hdr=["Ticker","Setup","Tranche","Zone","Sector","Entry Date","Entry Price","Init Stop","Curr Stop","Shares","Current Price","Status","Exit Date","Exit Price","Exit Reason","PnL","PnL Pct","R-Multiple","Init Risk","Open Heat","Drawdown","Days Held","Regime","10SMA Start","Earnings","Notes"];var rows=pos.map(function(p){var c=p.status==="closed"&&p.exp?p.exp:(p.cp||p.ep);var pnl=(c-p.ep)*p.sh;var pP=p.ep?((c-p.ep)/p.ep):0;var rps=p.ep-p.sp;var rM=rps?((c-p.ep)/rps):0;var iR=(p.ep-p.sp)*p.sh;var oH=(p.ep-(p.cs||p.sp))*p.sh;var dd=(c-(p.cs||p.sp))*p.sh;var ds=p.ed?tDays(p.ed,p.exd||td()):0;var n=(p.notes||"").replace(/,/g," ").replace(/\n/g," ");return [p.tk||"",p.st||"",p.tr||"",p.zone||"",p.sector||"",p.ed||"",p.ep||"",p.sp||"",p.cs||p.sp||"",p.sh||"",c||"",p.status||"",p.exd||"",p.exp||"",p.exr||"",pnl.toFixed(2),(pP*100).toFixed(2),rM.toFixed(2),iR.toFixed(2),oH.toFixed(2),dd.toFixed(2),ds,p.reg||"",p.sma||"",p.earn||"",n].join(",");});var csv=hdr.join(",")+nl+rows.join(nl);var b=new Blob([csv],{type:"text/csv"});var u=URL.createObjectURL(b);var a=document.createElement("a");a.href=u;a.download="TradePath_trades_"+td()+".csv";a.click();URL.revokeObjectURL(u);tst("CSV exported");}
+
+async function impData(e){const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(d.pos)for(const p of d.pos)await dPut('pos',p);if(d.reg)for(const r of d.reg)await dPut('reg',r);if(d.jrn)for(const j of d.jrn)await dPut('jrn',j);if(d.settings){S={...DS,...d.settings};await dPut('cfg',{key:'config',value:S});}tst('Imported');ren();}catch(er){tst('Error: '+er.message);}e.target.value='';}
+function rstData(){shCf('DELETE all positions, journal, and regime history. Settings kept. Continue?',async()=>{await dClr('pos');await dClr('reg');await dClr('jrn');tst('Data cleared');ren();});}
+
+/* ===== INIT ===== */
+async function ren(){if(!fbUID)return;await ldSet();await ldReg();renDash();}
+async function loadAfterAuth(){
+  try{
+    await odb();
+    await ldSet();await ldReg();popSet();renDash();
+    setupRealtimeSync();
+    console.log('TradePath v3.0 (Firebase Sync) ready');
+  }catch(e){console.error('loadAfterAuth:',e);}
+}
+function init(){
+  fbAuth.onAuthStateChanged(function(user){
+    updateAuthUI(user);
+    if(user){
+      loadAfterAuth();
+    } else {
+      popSet();
+    }
+  });
+}
+init();
+
+</script></body></html>
